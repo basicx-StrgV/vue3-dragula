@@ -22,6 +22,12 @@ export default function(vueApp: App) {
     let name: string = 'globalBag';
     let drake: any;
 
+    (globalThis as any).vueDragula = {
+        options: service.setOptions.bind(service),
+        find: service.find.bind(service),
+        eventBus: service.eventBus
+    }
+
     vueApp.directive('dragula', ({
         beforeMount(container: any, binding: DirectiveBinding, vnode: VNode) {
           const bagName = vnode.props ? vnode.props['bag'] : null;
