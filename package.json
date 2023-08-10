@@ -1,9 +1,14 @@
 {
   "name": "vue3-dragula",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Wrapper library for dragula in vue3",
-  "main": "src/index.js",
+  "main": "dist/vue3-dragula.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
