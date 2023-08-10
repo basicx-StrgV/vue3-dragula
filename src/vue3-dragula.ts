@@ -1,5 +1,5 @@
 //--------------------------------------------------//
-// vue3-dragula wrapper                             //
+// vue3-dragula                                     //
 // Created by basicx-StrgV                          //
 // https://github.com/basicx-StrgV/                 //
 //--------------------------------------------------//

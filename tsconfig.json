@@ -1,0 +1,17 @@
+{
+    "include": ["src/**/*"],
+
+    "compilerOptions": {
+        "composite": true,
+        "esModuleInterop": true,
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "outDir": "dist"
+    },
+    "lib": ["es2015"]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "vue3-dragula",
+  "version": "1.0.0",
+  "description": "Wrapper library for dragula in vue3",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/basicx-StrgV/vue3-dragula.git"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "dragula"
+  ],
+  "author": "basicx-StrgV",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/basicx-StrgV/vue3-dragula/issues"
+  },
+  "homepage": "https://github.com/basicx-StrgV/vue3-dragula#readme",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@types/dragula": "^3.7.1",
+    "dragula": "^3.7.3",
+    "mitt": "^3.0.1",
+    "vue": "^3.3.4"
+  }
+}
