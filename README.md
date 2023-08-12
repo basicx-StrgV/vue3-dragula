@@ -37,7 +37,7 @@ The functionality of the plugin can be used in your vue components.
 The template of two lists with items that can be dragged and dropped could look like the following example.
 
 ``` vue
-<div class="wrapper">
+<div class="container-wrapper">
   <div class="container" v-dragula="itemListOne" bag="bag-one">
     <div v-for="item in itemListOne" :key="item.id">{{ item.text }}</div>
   </div>
