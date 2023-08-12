@@ -3,15 +3,17 @@
 
     "compilerOptions": {
         "composite": true,
+        "noImplicitAny": true,
+        "allowJs": true,
         "esModuleInterop": true,
-        "target": "es6",
-        "module": "commonjs",
+        "target": "ES6",
+        "module": "ES2015",
         "moduleResolution": "node",
+        "sourceMap": true,
         "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
         },
-        "outDir": "dist"
-    },
-    "lib": ["es2015"]
+        "outDir": "./dist/"
+    }
 }

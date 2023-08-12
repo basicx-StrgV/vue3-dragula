@@ -2,14 +2,14 @@
   "name": "vue3-dragula",
   "version": "0.1.0",
   "description": "Vue3 wrapper library for dragula",
-  "main": "dist/vue3-dragula.js",
+  "main": "./dist/vue3-dragula.js",
+  "types": "./dist/src/vue3-dragula.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --mode=production",
+    "build-dev": "webpack --mode=development"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,10 @@
   },
   "homepage": "https://github.com/basicx-StrgV/vue3-dragula#readme",
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@types/dragula": "^3.7.1",
