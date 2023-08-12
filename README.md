@@ -9,3 +9,5 @@ The library is available on [npm](https://www.npmjs.com/) as  [`vue3-dragula`](h
 ``` bash
 npm install --save vue3-dragula
 ```
+
+__More infos coming soon!__
