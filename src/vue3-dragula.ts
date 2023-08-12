@@ -212,13 +212,14 @@ class DragulaService {
   }
 
   handleModels(name: string, bag: Bag): void {
-    // Cancel if drak object does not exist or if it is already registert
+    // Cancel if drake object does not exist or if it is already registert
     if(bag.drake == null || bag.drakeRegistert){
       return;
     }
 
     let dragElm: Element;
     let dragIndex: number;
+    let isManualCancel: boolean = false;
 
     // On Remove event handler
     bag.drake.on('remove', (el: Element, container: Element, source: Element) => {
@@ -229,6 +230,7 @@ class DragulaService {
       let sourceModel: any[] = this.findModelForContainer(source, bag);
       sourceModel.splice(dragIndex, 1);
 
+      isManualCancel = true;
       bag.drake.cancel(true);
 
       // Emit removeModel event
@@ -250,15 +252,19 @@ class DragulaService {
       let dropIndex: number = this.domIndexOf(dropElm, target);
       let sourceModel: any[] = this.findModelForContainer(source, bag);
 
+      let dropElmModel: any = null;
+
       if (target === source) {
         nextTick(() => {
           sourceModel.splice(dropIndex, 0, sourceModel.splice(dragIndex, 1)[0]);
         });
+
+        dropElmModel = sourceModel[dropIndex];
       } 
       else {
         let notCopy = dragElm === dropElm;
         let targetModel = this.findModelForContainer(target, bag);
-        let dropElmModel = notCopy ? sourceModel[dragIndex] : this.cloneObject(sourceModel[dragIndex]);
+        dropElmModel = notCopy ? sourceModel[dragIndex] : this.cloneObject(sourceModel[dragIndex]);
 
         if (notCopy) {
           nextTick(() => {
@@ -271,10 +277,27 @@ class DragulaService {
         });
       }
 
+      isManualCancel = true;
       bag.drake.cancel(true);
 
       // Emit dropModel event 
-      this.eventBus.emit('dropModel', [name, dropElm, target, source, dropIndex]);
+      this.eventBus.emit('dropModel', [name, dropElm, dropElmModel, target, source, dropIndex]);
+    });
+
+    // On Cancel event handler
+    bag.drake.on('cancel', (dropElm: Element, container: Element, source: Element) => {
+      // Only handle the cancel if it was triggerd by dragula and not from this library
+      if (bag.drake == null || isManualCancel) {
+        isManualCancel = false;
+        return;
+      }
+
+      let sourceModel: any[] = this.findModelForContainer(source, bag);
+
+      let dropElmModel: any = sourceModel[dragIndex];
+
+      // Emit cancelModel event 
+      this.eventBus.emit('cancelModel', [name, dropElm, dropElmModel, source]);
     });
 
     // Set registration flag

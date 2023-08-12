@@ -1,6 +1,6 @@
 {
   "name": "vue3-dragula",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Vue3 wrapper library for dragula",
   "main": "./dist/src/vue3-dragula.js",
   "types": "./dist/src/vue3-dragula.d.ts",
