@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/basicx-StrgV/vue3-dragula#readme",
   "devDependencies": {
+    "@babel/types": "^7.22.10",
     "typescript": "^5.1.6"
   },
   "dependencies": {
