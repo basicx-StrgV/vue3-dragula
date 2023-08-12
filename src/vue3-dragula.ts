@@ -12,7 +12,7 @@ import type { Drake, DragulaOptions } from 'dragula';
 import mitt from 'mitt';
 import type { Emitter } from 'mitt';
 import { nextTick } from 'vue';
-import type { App, Directive, DirectiveBinding, VNode } from 'vue';
+import type { App, Directive, DirectiveBinding, VNode, Plugin } from 'vue';
 
 if (!dragula) {
     throw new Error('[vue3-dragula] cannot locate package: dragula');
@@ -20,6 +20,12 @@ if (!dragula) {
 
 if (!mitt) {
   throw new Error('[vue3-dragula] cannot locate package: mitt');
+}
+
+export const VueDragula: Plugin = {
+  install(app: any, options: any) {
+    vueDragula(app);
+  }
 }
 
 export class Bag {
@@ -51,7 +57,7 @@ export class VueDragulaGlobal {
   static find: Function;
 }
 
-export function vueDragula(vueApp: App) {
+function vueDragula(vueApp: App) {
     const service: DragulaService = new DragulaService();
 
     let name: string = 'globalBag';
