@@ -1,9 +1,10 @@
 # vue3-dragula (WIP)
 > 👌 Drag and drop so simple it hurts
 
-Vue3 wrapper library for [`dragula`](https://github.com/bevacqua/dragula)
+Vue3 wrapper library for [`dragula`](https://github.com/bevacqua/dragula).  
+<sup>Written in typescript.</sup>
 
-Based on [`vue-dragula`](https://github.com/Astray-git/vue-dragula) from [@Astray-git](https://github.com/Astray-git)
+Based on [`vue-dragula`](https://github.com/Astray-git/vue-dragula) from [@Astray-git](https://github.com/Astray-git).
 
 ---
 [![CodeQL](https://github.com/basicx-StrgV/vue3-dragula/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/basicx-StrgV/vue3-dragula/actions/workflows/github-code-scanning/codeql)
