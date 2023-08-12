@@ -120,5 +120,5 @@ VueDragulaGlobal.eventBus.on('drop', (args) => {
 ### vue3-dragula Events
 | Event Name |      Listener Arguments      |  Event Description |
 | :-------------: |:-------------:| -----|
-| dropModel | bagName, el, target, source, dropIndex | model was synced, dropIndex exposed |
-| removeModel | bagName, el, container, removeIndex | model was synced, removeIndex exposed |
+| dropModel | bagName, el, target, source, dropIndex | Model was synced, dropIndex exposed |
+| removeModel | bagName, el, container, removeIndex | Model was synced, removeIndex exposed |
