@@ -98,5 +98,26 @@ _More infos about the `drake` object can be found in the [dragula documentation]
 const bagOne = VueDragulaGlobal.find('bag-one');
 ```
 
+## Events
+The events can be accessed through the `VueDragulaGlobal` objects event bus, which can be important from `vue3-dragula`.
 
+``` js
+import { VueDragulaGlobal } from 'vue3-dragula';
+```
 
+The dragula instance events can be accessed from the event bus.
+
+_More infos about the dragula events can be found in the [dragula documentation](https://github.com/bevacqua/dragula/blob/master/readme.markdown#drakeon-events)._
+
+``` js
+VueDragulaGlobal.eventBus.on('drop', (args) => {
+  console.log('drop');
+  console.log(args);
+});
+```
+
+### vue3-dragula Events
+| Event Name |      Listener Arguments      |  Event Description |
+| :-------------: |:-------------:| -----|
+| dropModel | bagName, el, target, source, dropIndex | model was synced, dropIndex exposed |
+| removeModel | bagName, el, container, removeIndex | model was synced, removeIndex exposed |
