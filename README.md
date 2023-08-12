@@ -59,7 +59,7 @@ _To learn more on how to use `v-for` and `key`, please read the official [vue3 d
   - __The `bag` attribute takes a string as its value, that represents the name of the bag.__  
 __A bag is a collection of multiple containers allocated to the same dragula instance.__  
 __All containers that should be dragged and dropped in between, need to be in the same bag.__  
-_(As seen in the [usage](README.md#Usage) sample. )_
+_(As seen in the usage sample. )_
 
 
 
