@@ -15,11 +15,11 @@ import { nextTick } from 'vue';
 import type { App, Directive, DirectiveBinding, VNode, Plugin } from 'vue';
 
 if (!dragula) {
-    throw new Error('[vue3-dragula] cannot locate package: dragula');
+    throw new Error('[vue3-dragula] Cannot locate package: dragula');
 }
 
 if (!mitt) {
-  throw new Error('[vue3-dragula] cannot locate package: mitt');
+  throw new Error('[vue3-dragula] Cannot locate package: mitt');
 }
 
 export const VueDragula: Plugin = {
@@ -54,21 +54,23 @@ export class Bag {
 export class VueDragulaGlobal {
   static eventBus: Emitter<any>;
   static options: Function;
+  static injectOptions: Function;
   static find: Function;
 }
 
 function vueDragula(vueApp: App) {
     const service: DragulaService = new DragulaService();
 
-    let name: string = 'globalBag';
-    let drake: Drake | null;
-
     VueDragulaGlobal.eventBus = service.eventBus;
     VueDragulaGlobal.find = service.find.bind(service);
     VueDragulaGlobal.options = service.setOptions.bind(service);
+    VueDragulaGlobal.injectOptions = service.injectOptions.bind(service);
 
     vueApp.directive('dragula', ({
         beforeMount(container: Element, binding: DirectiveBinding, vnode: VNode) {
+          let name: string = 'globalBag';
+          let drake: Drake | null;
+
           const bagName: string | null = vnode.props ? vnode.props['bag'] : null;
 
           if (bagName != null && bagName.trim().length !== 0) {
@@ -128,32 +130,34 @@ function vueDragula(vueApp: App) {
       } as Directive));
 
       function updateModelBinding(container: Element, binding: DirectiveBinding, vnode: VNode){
-          const newValue: any[] | null = vnode ? (binding.value as any[]) : null;
+        let name: string = 'globalBag';
 
-          if (newValue == null) { 
-            return; 
-          }
+        const newValue: any[] | null = vnode ? (binding.value as any[]) : null;
 
-          const bagName: string | null = vnode.props ? vnode.props['bag'] : null;
-          if (bagName != null && bagName.trim().length !== 0) {
-            name = bagName;
-          }
+        if (newValue == null) { 
+          return; 
+        }
 
-          const bag = service.find(name);
-          if (bag == null) {
-            return;
-          }
-    
-          let modelContainer = service.findModelContainerByContainer(container, bag);
-    
-          if (modelContainer) {
-            modelContainer.model = newValue;
-          } else {
-            bag.models.push({
-              model: newValue,
-              container: container
-            });
-          }
+        const bagName: string | null = vnode.props ? vnode.props['bag'] : null;
+        if (bagName != null && bagName.trim().length !== 0) {
+          name = bagName;
+        }
+
+        const bag = service.find(name);
+        if (bag == null) {
+          return;
+        }
+  
+        let modelContainer = service.findModelContainerByContainer(container, bag);
+  
+        if (modelContainer) {
+          modelContainer.model = newValue;
+        } else {
+          bag.models.push({
+            model: newValue,
+            container: container
+          });
+        }
       }
 }
 
@@ -322,6 +326,30 @@ class DragulaService {
     if(bag.drake != null){
       this.handleModels(name, bag);
     }
+  }
+
+  injectOptions(name: string, options: DragulaOptions): void{
+    let bag: Bag = this.find(name);
+
+    if(bag == null){
+      throw new Error('[vue3-dragula] Bag named: "' + name + '" does not exists.');
+    }
+
+    let currentContainers: Element[] = [];
+    if(bag.drake != null){
+      currentContainers = bag.drake.containers;
+      bag.drake.destroy();
+      bag.drake = null;
+      bag.drakeRegistert = false;
+      bag.initEvents = false;
+    }
+
+    options.containers = currentContainers;
+
+    bag.drake = dragula(options);
+
+    this.handleModels(name, bag);
+    this.setupEvents(bag);
   }
 
   setupEvents(bag: Bag): void {
