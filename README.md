@@ -114,14 +114,13 @@ _More infos about the dragula events can be found in the [dragula documentation]
 
 ``` js
 VueDragulaGlobal.eventBus.on('drop', (args) => {
-  console.log('drop');
   console.log(args);
 });
 ```
 
 ### vue3-dragula Events
-| Event Name |      Listener Arguments      |  Event Description |
+| Event Name | Listener Arguments | Event Description |
 | :-------------: |:-------------:| -----|
 | dropModel | bagName, el, elModel, target, source, dropIndex | Model was synced, dropIndex exposed |
 | removeModel | bagName, el, container, removeIndex | Model was synced, removeIndex exposed |
-| cancelModel | bagName, el, elModel, source | Drop action was canceld |
+| cancelModel | bagName, el, elModel, source | Model drag action was canceld |
