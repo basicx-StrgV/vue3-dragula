@@ -87,6 +87,26 @@ VueDragulaGlobal.options('bag-one', {
   copy: false
 });
 ```
+
+### `injectOptions(name, options)`
+The inject options function provides the functionality of injecting new dragula options into an existing bag instance.  
+This will override the existing configuration.  
+Only the existing containers will be keeped.  
+The `name` parameter should be a ___string___ containing the name of the bag, and the `options` parameter should be a ___dragula options object___.
+
+_More infos about dragula options can be found in the [dragula documentation](https://github.com/bevacqua/dragula/blob/master/readme.markdown#optionscontainers)._
+
+``` js
+VueDragulaGlobal.injectOptions('bag-one', {
+  moves: function (el, source, handle, sibling) {
+    return checkElementMove(el, source, handle);
+  },
+  direction: 'horizontal',
+  copy: true
+});
+```
+
+
 ### `find(name)`
 
 The find function returns a `Bag` object, depending on the provided bag name.  
