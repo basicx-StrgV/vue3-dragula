@@ -2,13 +2,25 @@
   "name": "vue3-dragula",
   "version": "1.0.0",
   "description": "Vue3 wrapper library for dragula",
-  "main": "./dist/src/vue3-dragula.js",
-  "types": "./dist/src/vue3-dragula.d.ts",
-  "files": [
-    "dist"
-  ],
+  "type": "module",
+  "main": "./dist/vue3-dragula.umd.cjs",
+  "module": "./dist/vue3-dragula.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/src/vue3-dragula.d.ts",
+        "default": "./dist/vue3-dragula.js"
+      },
+      "require": {
+        "types": "./dist/src/vue3-dragula.d.ts",
+        "default": "./dist/vue3-dragula.umd.cjs"
+      }
+    }
+  },
   "scripts": {
-    "build": "tsc"
+    "build": "run-p type-check build-only",
+    "build-only": "vite build",
+    "type-check": "tsc --noEmit -p tsconfig.json --composite false"
   },
   "repository": {
     "type": "git",
@@ -27,7 +39,12 @@
   "homepage": "https://github.com/basicx-StrgV/vue3-dragula#readme",
   "devDependencies": {
     "@babel/types": "^7.22.10",
-    "typescript": "^5.1.6"
+    "@types/node": "^20.8.9",
+    "npm-run-all": "^4.1.5",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-plugin-dts": "^3.6.2"
   },
   "dependencies": {
     "@types/dragula": "^3.7.1",

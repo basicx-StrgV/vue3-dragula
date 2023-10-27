@@ -9,7 +9,7 @@
         "target": "ES6",
         "module": "ES2015",
         "moduleResolution": "node",
-        "sourceMap": true,
+        "declaration": true,
         "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
