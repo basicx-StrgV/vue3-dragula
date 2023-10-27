@@ -7,26 +7,26 @@
 // https://github.com/Astray-git                    //
 //--------------------------------------------------//
 
-import dragula from 'dragula';
-import type { Drake, DragulaOptions } from 'dragula';
-import mitt from 'mitt';
-import type { Emitter } from 'mitt';
-import { nextTick } from 'vue';
-import type { App, Directive, DirectiveBinding, VNode, Plugin } from 'vue';
+import type { Drake, DragulaOptions } from "dragula";
+import type { App, Directive, DirectiveBinding, VNode, Plugin } from "vue";
+import type { Emitter } from "mitt";
+import { nextTick } from "vue";
+import dragula from "dragula";
+import mitt from "mitt";
 
 if (!dragula) {
-    throw new Error('[vue3-dragula] Cannot locate package: dragula');
+  throw new Error("[vue3-dragula] Cannot locate package: dragula");
 }
 
 if (!mitt) {
-  throw new Error('[vue3-dragula] Cannot locate package: mitt');
+  throw new Error("[vue3-dragula] Cannot locate package: mitt");
 }
 
 export const VueDragula: Plugin = {
   install(app: any, options: any) {
     vueDragula(app);
-  }
-}
+  },
+};
 
 export class Bag {
   name: string;
@@ -35,16 +35,16 @@ export class Bag {
   initEvents: boolean = false;
   models: any[] = [];
 
-  constructor(name: string, drake: any){
+  constructor(name: string, drake: any) {
     this.name = name;
     this.drake = drake;
   }
 
-  destroy(){
+  destroy() {
     this.drakeRegistert = false;
     this.initEvents = false;
     this.models.splice(0, this.models.length);
-    if(this.drake != null){
+    if (this.drake != null) {
       this.drake.destroy();
     }
     this.drake = null;
@@ -59,106 +59,115 @@ export class VueDragulaGlobal {
 }
 
 function vueDragula(vueApp: App) {
-    const service: DragulaService = new DragulaService();
+  const service: DragulaService = new DragulaService();
 
-    VueDragulaGlobal.eventBus = service.eventBus;
-    VueDragulaGlobal.find = service.find.bind(service);
-    VueDragulaGlobal.options = service.setOptions.bind(service);
-    VueDragulaGlobal.injectOptions = service.injectOptions.bind(service);
+  VueDragulaGlobal.eventBus = service.eventBus;
+  VueDragulaGlobal.find = service.find.bind(service);
+  VueDragulaGlobal.options = service.setOptions.bind(service);
+  VueDragulaGlobal.injectOptions = service.injectOptions.bind(service);
 
-    vueApp.directive('dragula', ({
-        beforeMount(container: Element, binding: DirectiveBinding, vnode: VNode) {
-          let name: string = 'globalBag';
-          let drake: Drake | null;
+  vueApp.directive("dragula", {
+    beforeMount(container: Element, binding: DirectiveBinding, vnode: VNode) {
+      let name: string = "globalBag";
+      let drake: Drake | null;
 
-          const bagName: string | null = vnode.props ? vnode.props['bag'] : null;
+      const bagName: string | null = vnode.props ? vnode.props["bag"] : null;
 
-          if (bagName != null && bagName.trim().length !== 0) {
-            name = bagName;
-          }
+      if (bagName != null && bagName.trim().length !== 0) {
+        name = bagName;
+      }
 
-          let bag: Bag | null = service.find(name);
-          if (bag != null) {
-            drake = bag.drake;
+      let bag: Bag | null = service.find(name);
+      if (bag != null) {
+        drake = bag.drake;
 
-            if(drake == null){
-              return;
-            }
-
-            drake.containers.push(container);
-
-            updateModelBinding(container, binding, vnode);
-
-            return;
-          }
-
-          drake = dragula(({ containers: [container] } as DragulaOptions));
-
-          bag = service.add(name, drake);
-          updateModelBinding(container, binding, vnode);
-    
-          service.handleModels(name, bag);
-        },
-    
-        updated(container: Element, binding: DirectiveBinding, vnode: VNode, oldVnode: VNode) {
-          updateModelBinding(container, binding, vnode);
-        },
-    
-        unmounted(container: Element, binding: DirectiveBinding, vnode: VNode) {
-          let unbindBagName: string = 'globalBag';
-
-          const bagName: string | null = vnode.props ? vnode.props['bag'] : null;
-
-          if (bagName != null && bagName.trim().length !== 0) {
-            unbindBagName = bagName;
-          }
-
-          let bag: Bag | null = service.find(unbindBagName);
-          if (bag == null || bag.drake == null) { 
-            return; 
-          }
-
-          let containerIndex = bag.drake.containers.indexOf(container);
-          if (containerIndex > -1) {
-            bag.drake.containers.splice(containerIndex, 1);
-          }
-
-          if (bag.drake.containers.length === 0) {
-            service.destroy(unbindBagName);
-          }
-        }
-      } as Directive));
-
-      function updateModelBinding(container: Element, binding: DirectiveBinding, vnode: VNode){
-        let name: string = 'globalBag';
-
-        const newValue: any[] | null = vnode ? (binding.value as any[]) : null;
-
-        if (newValue == null) { 
-          return; 
-        }
-
-        const bagName: string | null = vnode.props ? vnode.props['bag'] : null;
-        if (bagName != null && bagName.trim().length !== 0) {
-          name = bagName;
-        }
-
-        const bag = service.find(name);
-        if (bag == null) {
+        if (drake == null) {
           return;
         }
-  
-        let modelContainer = service.findModelContainerByContainer(container, bag);
-  
-        if (modelContainer) {
-          modelContainer.model = newValue;
-        } else {
-          bag.models.push({
-            model: newValue,
-            container: container
-          });
-        }
+
+        drake.containers.push(container);
+
+        updateModelBinding(container, binding, vnode);
+
+        return;
       }
+
+      drake = dragula({ containers: [container] } as DragulaOptions);
+
+      bag = service.add(name, drake);
+      updateModelBinding(container, binding, vnode);
+
+      service.handleModels(name, bag);
+    },
+
+    updated(
+      container: Element,
+      binding: DirectiveBinding,
+      vnode: VNode,
+      oldVnode: VNode
+    ) {
+      updateModelBinding(container, binding, vnode);
+    },
+
+    unmounted(container: Element, binding: DirectiveBinding, vnode: VNode) {
+      let unbindBagName: string = "globalBag";
+
+      const bagName: string | null = vnode.props ? vnode.props["bag"] : null;
+
+      if (bagName != null && bagName.trim().length !== 0) {
+        unbindBagName = bagName;
+      }
+
+      let bag: Bag | null = service.find(unbindBagName);
+      if (bag == null || bag.drake == null) {
+        return;
+      }
+
+      let containerIndex = bag.drake.containers.indexOf(container);
+      if (containerIndex > -1) {
+        bag.drake.containers.splice(containerIndex, 1);
+      }
+
+      if (bag.drake.containers.length === 0) {
+        service.destroy(unbindBagName);
+      }
+    },
+  } as Directive);
+
+  function updateModelBinding(
+    container: Element,
+    binding: DirectiveBinding,
+    vnode: VNode
+  ) {
+    let name: string = "globalBag";
+
+    const newValue: any[] | null = vnode ? (binding.value as any[]) : null;
+
+    if (newValue == null) {
+      return;
+    }
+
+    const bagName: string | null = vnode.props ? vnode.props["bag"] : null;
+    if (bagName != null && bagName.trim().length !== 0) {
+      name = bagName;
+    }
+
+    const bag = service.find(name);
+    if (bag == null) {
+      return;
+    }
+
+    let modelContainer = service.findModelContainerByContainer(container, bag);
+
+    if (modelContainer) {
+      modelContainer.model = newValue;
+    } else {
+      bag.models.push({
+        model: newValue,
+        container: container,
+      });
+    }
+  }
 }
 
 class DragulaService {
@@ -168,21 +177,21 @@ class DragulaService {
   eventBus: Emitter<any>;
   events: string[];
 
-  constructor () {
+  constructor() {
     this.bags = [];
     this.eventBus = mitt();
     this.events = [
-      'cancel',
-      'cloned',
-      'drag',
-      'dragend',
-      'drop',
-      'out',
-      'over',
-      'remove',
-      'shadow',
-      'dropModel',
-      'removeModel'
+      "cancel",
+      "cloned",
+      "drag",
+      "dragend",
+      "drop",
+      "out",
+      "over",
+      "remove",
+      "shadow",
+      "dropModel",
+      "removeModel",
     ];
   }
 
@@ -190,7 +199,9 @@ class DragulaService {
     let bag: Bag | null = this.find(name);
 
     if (bag != null) {
-      throw new Error('[vue3-dragula] Bag named: "' + name + '" already exists.');
+      throw new Error(
+        '[vue3-dragula] Bag named: "' + name + '" already exists.'
+      );
     }
 
     bag = new Bag(name, drake);
@@ -217,7 +228,7 @@ class DragulaService {
 
   handleModels(name: string, bag: Bag): void {
     // Cancel if drake object does not exist or if it is already registert
-    if(bag.drake == null || bag.drakeRegistert){
+    if (bag.drake == null || bag.drakeRegistert) {
       return;
     }
 
@@ -226,83 +237,109 @@ class DragulaService {
     let isManualCancel: boolean = false;
 
     // On Remove event handler
-    bag.drake.on('remove', (el: Element, container: Element, source: Element) => {
-      if (bag.drake == null) {
-        return;
+    bag.drake.on(
+      "remove",
+      (el: Element, container: Element, source: Element) => {
+        if (bag.drake == null) {
+          return;
+        }
+
+        let sourceModel: any[] = this.findModelForContainer(source, bag);
+        sourceModel.splice(dragIndex, 1);
+
+        isManualCancel = true;
+        bag.drake.cancel(true);
+
+        // Emit removeModel event
+        this.eventBus.emit("removeModel", [name, el, source, dragIndex]);
       }
-
-      let sourceModel: any[] = this.findModelForContainer(source, bag);
-      sourceModel.splice(dragIndex, 1);
-
-      isManualCancel = true;
-      bag.drake.cancel(true);
-
-      // Emit removeModel event
-      this.eventBus.emit('removeModel', [name, el, source, dragIndex]);
-    });
+    );
 
     // On Drag event handler
-    bag.drake.on('drag', (el: Element, source: Element) => {
+    bag.drake.on("drag", (el: Element, source: Element) => {
       dragElm = el;
       dragIndex = this.domIndexOf(el, source);
     });
 
     // On Drop event handler
-    bag.drake.on('drop', (dropElm: Element, target: Element, source: Element) => {
-      if (bag.drake == null || target == null) {
-        return;
-      }
+    bag.drake.on(
+      "drop",
+      (dropElm: Element, target: Element, source: Element) => {
+        if (bag.drake == null || target == null) {
+          return;
+        }
 
-      let dropIndex: number = this.domIndexOf(dropElm, target);
-      let sourceModel: any[] = this.findModelForContainer(source, bag);
+        let dropIndex: number = this.domIndexOf(dropElm, target);
+        let sourceModel: any[] = this.findModelForContainer(source, bag);
 
-      let dropElmModel: any = null;
+        let dropElmModel: any = null;
 
-      if (target === source) {
-        nextTick(() => {
-          sourceModel.splice(dropIndex, 0, sourceModel.splice(dragIndex, 1)[0]);
-        });
-
-        dropElmModel = sourceModel[dropIndex];
-      } 
-      else {
-        let notCopy = dragElm === dropElm;
-        let targetModel = this.findModelForContainer(target, bag);
-        dropElmModel = notCopy ? sourceModel[dragIndex] : this.cloneObject(sourceModel[dragIndex]);
-
-        if (notCopy) {
+        if (target === source) {
           nextTick(() => {
-            sourceModel.splice(dragIndex, 1);
+            sourceModel.splice(
+              dropIndex,
+              0,
+              sourceModel.splice(dragIndex, 1)[0]
+            );
+          });
+
+          dropElmModel = sourceModel[dropIndex];
+        } else {
+          let notCopy = dragElm === dropElm;
+          let targetModel = this.findModelForContainer(target, bag);
+          dropElmModel = notCopy
+            ? sourceModel[dragIndex]
+            : this.cloneObject(sourceModel[dragIndex]);
+
+          if (notCopy) {
+            nextTick(() => {
+              sourceModel.splice(dragIndex, 1);
+            });
+          }
+
+          nextTick(() => {
+            targetModel.splice(dropIndex, 0, dropElmModel);
           });
         }
 
-        nextTick(() => {
-          targetModel.splice(dropIndex, 0, dropElmModel);
-        });
+        isManualCancel = true;
+        bag.drake.cancel(true);
+
+        // Emit dropModel event
+        this.eventBus.emit("dropModel", [
+          name,
+          dropElm,
+          dropElmModel,
+          target,
+          source,
+          dropIndex,
+        ]);
       }
-
-      isManualCancel = true;
-      bag.drake.cancel(true);
-
-      // Emit dropModel event 
-      this.eventBus.emit('dropModel', [name, dropElm, dropElmModel, target, source, dropIndex]);
-    });
+    );
 
     // On Cancel event handler
-    bag.drake.on('cancel', (dropElm: Element, container: Element, source: Element) => {
-      // Only handle the cancel if it was triggerd by dragula and not from this library
-      if (bag.drake == null || isManualCancel) {
-        isManualCancel = false;
-        return;
+    bag.drake.on(
+      "cancel",
+      (dropElm: Element, container: Element, source: Element) => {
+        // Only handle the cancel if it was triggerd by dragula and not from this library
+        if (bag.drake == null || isManualCancel) {
+          isManualCancel = false;
+          return;
+        }
+
+        let sourceModel: any[] = this.findModelForContainer(source, bag);
+
+        let dropElmModel: any = sourceModel[dragIndex];
+
+        // Emit cancelModel event
+        this.eventBus.emit("cancelModel", [
+          name,
+          dropElm,
+          dropElmModel,
+          source,
+        ]);
       }
-
-      let sourceModel: any[] = this.findModelForContainer(source, bag);
-
-      let dropElmModel: any = sourceModel[dragIndex];
-
-      // Emit cancelModel event 
-      this.eventBus.emit('cancelModel', [name, dropElm, dropElmModel, source]);
-    });
+    );
 
     // Set registration flag
     bag.drakeRegistert = true;
@@ -311,8 +348,8 @@ class DragulaService {
   destroy(name: string): void {
     let bag: Bag | null = this.find(name);
 
-    if (bag == null){ 
-      return; 
+    if (bag == null) {
+      return;
     }
 
     let bagIndex: number = this.bags.indexOf(bag);
@@ -323,20 +360,22 @@ class DragulaService {
 
   setOptions(name: string, options: DragulaOptions): void {
     let bag: Bag = this.add(name, dragula(options));
-    if(bag.drake != null){
+    if (bag.drake != null) {
       this.handleModels(name, bag);
     }
   }
 
-  injectOptions(name: string, options: DragulaOptions): void{
+  injectOptions(name: string, options: DragulaOptions): void {
     let bag: Bag = this.find(name);
 
-    if(bag == null){
-      throw new Error('[vue3-dragula] Bag named: "' + name + '" does not exists.');
+    if (bag == null) {
+      throw new Error(
+        '[vue3-dragula] Bag named: "' + name + '" does not exists.'
+      );
     }
 
     let currentContainers: Element[] = [];
-    if(bag.drake != null){
+    if (bag.drake != null) {
       currentContainers = bag.drake.containers;
       bag.drake.destroy();
       bag.drake = null;
@@ -357,15 +396,15 @@ class DragulaService {
     let _this: this = this;
 
     let emitter = (type: any) => {
-      function replicate () {
+      function replicate() {
         let args: any[] = Array.prototype.slice.call(arguments);
         _this.eventBus.emit(type, [bag.name].concat(args));
       }
 
-      if(bag.drake != null){
+      if (bag.drake != null) {
         bag.drake.on(type, replicate);
       }
-    }
+    };
 
     this.events.forEach(emitter);
   }
@@ -382,7 +421,7 @@ class DragulaService {
     return bag.models.find((model: any) => model.container === container);
   }
 
-  cloneObject(object: any): any{
-    return JSON.parse(JSON.stringify(object))
+  cloneObject(object: any): any {
+    return JSON.parse(JSON.stringify(object));
   }
 }
