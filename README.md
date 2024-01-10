@@ -27,7 +27,7 @@ import App from './App.vue';
 // Import of the VueDragula plugin
 import { VueDragula } from 'vue3-dragula';
 // required for dragula's css effects to work
-import 'dragula/dist/dragula.css'
+import 'dragula/dist/dragula.min.css'
 
 const vueApp = createApp(App);
 
